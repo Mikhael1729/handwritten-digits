@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 # Load and suffle data.
-data = np.array(pd.read_csv('../data/train.csv'))
+data = np.array(pd.read_csv('../data/train.csv')) # (m, 784 + 1)
 
 # m, samples, n values on each sample m.
 m, n = data.shape
@@ -10,22 +10,8 @@ m, n = data.shape
 # Shuffle the data.
 np.random.shuffle(data)
 
-"""
-data: (m, 784 + 1)
-dev_data: (784 + 1, m)
-
-  [
-    [5,    4   ]
-    [0.00, 0.20]
-    [0.25, 0.10]
-  ]
-
-X_dev = 
-"""
-
-
 # Dev data.
-data_dev = data[0:1000].T
+data_dev = data[0:1000].T # (784 + 1, m)
 Y_dev = data_dev[0]  # True labels.
 X_dev = data_dev[1:n] / 255  # Pixels for each label normalized (0 to 1)
 
@@ -39,11 +25,11 @@ _, m_train = X_train.shape
 def initialize():
   n0, n1, n2 = (784, 10, 10)
 
-  W1 = np.random.randn(n1, n0) - 0.5
-  b1 = np.random.randn(n1, 1) - 0.5
+  W1 = np.random.rand(n1, n0) - 0.5
+  b1 = np.random.rand(n1, 1) - 0.5
 
-  W2 = np.random.randn(n2, n1) - 0.5
-  b2 = np.random.randn(n2, 1) - 0.5
+  W2 = np.random.rand(n2, n1) - 0.5
+  b2 = np.random.rand(n2, 1) - 0.5
 
   return W1, b1, W2, b2
 
@@ -97,7 +83,7 @@ def backward_prop(Z1, A1, Z2, A2, W1, W2, X, Y):
   return dW1, db1, dW2, db2
 
 
-def update_parameters(W1, b1, W2, b2, dW1, db1, dW2, db2, alpha):
+def update_params(W1, b1, W2, b2, dW1, db1, dW2, db2, alpha):
   W1 = W1 - alpha * dW1
   b1 = b1 - alpha * db1
 
@@ -128,6 +114,9 @@ def gradient_descent(X, Y, alpha, iterations):
 
     # Backward propagation.
     dW1, db1, dW2, db2 = backward_prop(Z1, A1, Z2, A2, W1, W2, X, Y)
+
+    # Update parameters
+    W1, b1, W2, b2 = update_params(W1, b1, W2, b2, dW1, db1, dW2, db2, alpha)
 
     # Make updates.
     if i % 10 == 0:
