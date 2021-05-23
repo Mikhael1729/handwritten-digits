@@ -168,4 +168,6 @@ Accuracy on the dev set
 dev_predictions = predict(X_dev, W1, b1, W2, b2)
 dev_accuracy = get_accuracy(dev_predictions, Y_dev)
 
-print("Accuracy on the dev set: {dev_accuracy}")
+print(f"Accuracy on the dev set: {dev_accuracy}")
+print("Dev predictions:")
+print(dev_predictions)
