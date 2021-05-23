@@ -46,7 +46,7 @@ def softmax(Z):
   A = np.exp(Z) / sum(np.exp(Z))
   return A
 
-def forward_prop(w1, b1, w2, b2, X):
+def forward(w1, b1, w2, b2, X):
   Z1 = np.dot(w1, X) + b1
   A1 = relu(Z1)
 
@@ -69,7 +69,7 @@ def one_hot(Y):
   return one_hot_Y
 
 
-def backward_prop(Z1, A1, Z2, A2, W1, W2, X, Y):
+def backward(Z1, A1, Z2, A2, W1, W2, X, Y):
   one_hot_Y = one_hot(Y)
 
   dZ2 = A2 - one_hot_Y
@@ -110,10 +110,10 @@ def gradient_descent(X, Y, alpha, iterations):
 
   for i in range(iterations):
     # Forward propagation.
-    Z1, A1, Z2, A2 = forward_prop(W1, b1, W2, b2, X)
+    Z1, A1, Z2, A2 = forward(W1, b1, W2, b2, X)
 
     # Backward propagation.
-    dW1, db1, dW2, db2 = backward_prop(Z1, A1, Z2, A2, W1, W2, X, Y)
+    dW1, db1, dW2, db2 = backward(Z1, A1, Z2, A2, W1, W2, X, Y)
 
     # Update parameters
     W1, b1, W2, b2 = update_params(W1, b1, W2, b2, dW1, db1, dW2, db2, alpha)
@@ -127,7 +127,3 @@ def gradient_descent(X, Y, alpha, iterations):
 
   return W1, b1, W2, b2
 
-"""
-Test the model
-"""
-W1, b1, W2, b2 = gradient_descent(X_train, Y_train, 0.10, 500)
