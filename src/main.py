@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 
+from matplotlib import pyplot as plt
+
 # Load and suffle data.
 data = np.array(pd.read_csv('../data/train.csv')) # (m, 784 + 1)
 
@@ -46,14 +48,17 @@ def softmax(Z):
   A = np.exp(Z) / sum(np.exp(Z))
   return A
 
-def forward(w1, b1, w2, b2, X):
+def forward(w1, b1, w2, b2, X, for_prediction=False):
   Z1 = np.dot(w1, X) + b1
   A1 = relu(Z1)
 
   Z2 = np.dot(w2, A1) + b2
   A2 = softmax(Z2)
 
-  return Z1, A1, Z2, A2
+  if for_prediction == False:
+    return Z1, A1, Z2, A2
+  else:
+    return A2
 
 
 def one_hot(Y):
@@ -127,3 +132,31 @@ def gradient_descent(X, Y, alpha, iterations):
 
   return W1, b1, W2, b2
 
+def predict(X, W1, b1, W2, b2):
+  A2 = forward(W1, b1, W2, b2, X, for_prediction=True)
+  predictions = get_predictions(A2)
+
+  return predictions
+
+def test_prediction(index, W1, b1, W2, b2):
+  current_image = X_train[:, index, None]
+  prediction = predict(X_train[:, index, None], W1, b1, W2, b2)
+  label = Y_train[index]
+  print("Prediction: ", prediction)
+  print("Label: ", label)
+
+  current_image = current_image.reshape((28, 28)) * 255
+  plt.gray()
+  plt.imshow(current_image, interpolation='nearest')
+  plt.show()
+
+"""
+Train the network
+"""
+W1, b1, W2, b2 = gradient_descent(X_train, Y_train, 0.10, 500)
+
+"""
+Make predictions
+"""
+for i in range(0, 4):
+  test_prediction(i, W1, b1, W2, b2)
